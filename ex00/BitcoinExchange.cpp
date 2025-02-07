@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 17:41:16 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/07 19:15:03 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/07 19:30:10 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,17 @@ bool BitcoinExchange::is_valid_value(const std::string &value) const
 
 	std::isstringstream vs(value);
 	double  valuef;
-	if (!(vs >> valuef))
+	if (!(vs >> valuef) || num < 0 || num > 1000)
 		return false;
-	if (valuef < 0.0f || valuef > 1000.0f)
+	char garbage;
+	if (vs >> garbage)
 		return false;
+	if (!has_dot)
+	{
+		if (num < 1)
+			return false;
+		if (num != static_cast<int>(num))
+			return false;
+	}
+	return true;
 }
