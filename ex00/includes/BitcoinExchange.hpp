@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:04:32 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/06 18:02:56 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/07 17:14:30 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,14 @@
 
 #include <ifstream>
 #include <map>
+
+struct Date
+{
+	int	year;
+	int	month;
+	int	day;
+};
+
 
 class BitcoinExchange
 {
@@ -32,7 +40,7 @@ class BitcoinExchange
 	//member func
 	void load_data(std::string data);
 	void load_intput(std::string input);
-	double	convert(std::string &date) const;
+	double	convert(std::string &date, std::string amount) const;
 
 }
 
