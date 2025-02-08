@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 17:41:16 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/07 19:30:10 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/08 18:49:17 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,18 @@ BitcoinExchange::~BitcoinExchange()
 	return ;
 }
 
+static void trim(std::string &s)
+{
+	const std::string whitespace =" \t\n\r\f\v";
+	size_t start = s.find_first_not_of(whitespace);
+	if (start == std::string::npos)
+		return "";
+	size_t end = s.find_last_not_of(whitespace);
+	s = s.substr(start, end - start + 1);
+}
+
 // YYYY-MM-DD | 
+
 
 static bool is_leap(int year)
 {
@@ -133,4 +144,67 @@ bool BitcoinExchange::is_valid_value(const std::string &value) const
 			return false;
 	}
 	return true;
+}
+
+void BitcoinExchange::load_data(std::string str_data)
+{
+	std::ifstream data(str_data.c_str());
+	if (data.fail())
+		throw std::runtime_error("Couldn't open file.");
+	std::string line, data;
+	double rate;
+	if (std::getline(file, line))
+	{
+		if (line != "data,exchange_rate")
+		{
+			std::istringstream ss(line);
+			if (std::getline(ss, date, ",") && (ss >> rate))
+				m_rate[date] = rate;
+		}
+	}
+	while (std::getline(file, line))
+	{
+		std::stringstrean ss(line);
+		if (getline(ss,date, "," && (ss >> rate)))
+			m_rate[date] = rate;
+	}
+}
+
+void BitcoinExchange::load_intput(const std::string &str_input)
+{
+	std::ifstream input(str_input.c_str());;
+
+	if (input.fail())
+		throw std::runtime_error("Error: couldn't open file.");
+	std::string input_line, date, amount;
+	double value;
+	bool first_line = true;
+
+	while(std::getline(file, input_line))
+	{
+		trim(input_line);
+		if (first_line)
+		{
+			if (input_line == "date | vlue")
+			{
+				first_line = false;
+				continue ;
+			}
+		}
+		first_line = false;
+		std::stringstream ss(input_line);
+		if (intput_line[11] != '|' || input_line[10] != ' ' || input_line[12] != ' ')
+		{
+
+		}
+	}
+
+}
+
+void	btc(std::string input)
+{
+	BitcoinExchange btce;
+
+	btce.load_data("./data/data.csv");
+	btce.load_intput(input);
 }

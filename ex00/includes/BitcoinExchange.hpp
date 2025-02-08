@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:04:32 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/07 17:14:30 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/08 16:42:26 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,7 @@ class BitcoinExchange
 	double	convert(std::string &date, std::string amount) const;
 
 }
+
+void btc(char *input);
 
 #endif
