@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:04:32 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/10 18:18:22 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:28:29 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ class BitcoinExchange
 	
 	//member func
 	void load_data(const std::string &data);
-	void load_intput(std::string input);
+	void load_intput(const std::string &input);
 	double	convert(std::string &date, std::string amount) const;
 
 };

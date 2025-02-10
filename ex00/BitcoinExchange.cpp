@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 17:41:16 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/10 18:26:24 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:31:34 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,8 +162,8 @@ void BitcoinExchange::load_data(const std::string &str_data)
 	}
 	while (std::getline(data, line))
 	{
-		std::stringstream ss(line);
-		if (std::getline(ss, date, ',' && (ss >> rate)))
+		std::istringstream ss(line);
+		if (std::getline(ss, date, ',') && (ss >> rate))
 			m_rate[date] = rate;
 	}
 }
@@ -178,10 +178,10 @@ void BitcoinExchange::load_intput(const std::string &str_input)
 	double value;
 	bool first_line = true;
 
-	while(std::getline(file, input_line))
+	while(std::getline(input, input_line))
 	{
 		trim(input_line);
-		if (inputLine.empty())
+		if (input_line.empty())
 		{
 			std::cout << "Error: bad input => empty" << std::endl;
 			continue;
@@ -196,24 +196,24 @@ void BitcoinExchange::load_intput(const std::string &str_input)
 		}
 		first_line = false;
 		std::stringstream ss(input_line);
-		if (input_line.length() < 13 || intput_line[11] != '|' || input_line[10] != ' ' || input_line[12] != ' ')
+		if (input_line.length() < 13 || input_line[11] != '|' || input_line[10] != ' ' || input_line[12] != ' ')
 		{
 			input_line = input_line.empty() ? "empty" : input_line;
 			std::cout << "Error: bad input => " << input_line << std::endl;
 			continue ;
 		}
-		if (getline(ss, date, '|'))
+		if (std::getline(ss, date, '|'))
 		{
-			if (!getline(ss, value))
+			if (!std::getline(ss, value))
 			{
 				std::cout << "Error: Bad input =>" << input_line << std::endl;
 				continue ;
 			}
 			date.erase(date.find_last_not_of(" \n\r\t") + 1);
-			amount.erase(amount.find_first_not_of( \n\r\t));
+			amount.erase(amount.find_first_not_of(" \n\r\t"));
 			if (is_valid_date(date))
 			{
-				std::cout << "Error: bad input => " << date << std:;endl;
+				std::cout << "Error: bad input => " << date << std::endl;
 				continue ;
 			}
 			if (!is_valid_value(amount))
@@ -223,7 +223,7 @@ void BitcoinExchange::load_intput(const std::string &str_input)
 			}
 			try 
 			{
-				value = std::stdof(amount);
+				value = std::stod(amount);
 			}
 			catch (...)
 			{
