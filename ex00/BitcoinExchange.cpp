@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 17:41:16 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/10 18:31:34 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:36:59 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <cstdlib>
 
 BitcoinExchange::BitcoinExchange()
 {
@@ -204,7 +205,7 @@ void BitcoinExchange::load_intput(const std::string &str_input)
 		}
 		if (std::getline(ss, date, '|'))
 		{
-			if (!std::getline(ss, value))
+			if (!std::getline(ss, amount))
 			{
 				std::cout << "Error: Bad input =>" << input_line << std::endl;
 				continue ;
@@ -223,7 +224,7 @@ void BitcoinExchange::load_intput(const std::string &str_input)
 			}
 			try 
 			{
-				value = std::stod(amount);
+				value = std::atof(amount.c_str());
 			}
 			catch (...)
 			{
@@ -235,7 +236,7 @@ void BitcoinExchange::load_intput(const std::string &str_input)
 				std::cout << "Error: too large number." << std::endl;
 				continue ;
 			}
-			double rate = get_exchange_rate(date);
+			double rate = convert(date);
 			std::cout << date << " => " << value << " = " << value * rate << std::endl;
 		}
 		else
