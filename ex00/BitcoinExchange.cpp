@@ -6,13 +6,13 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 17:41:16 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/10 17:45:20 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:50:18 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BitcoinExchange.hpp"
 #include <iostream>
-#include <ifstream>
+#include <istream>
 #include <string>
 #include <sstream>
 

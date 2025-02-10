@@ -6,23 +6,15 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:04:32 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/10 17:28:52 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:50:02 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BITCOINEXCHANGE_HPP
 #define BITCOINEXCHANGE_HPP
 
-#include <ifstream>
+#include <istream>
 #include <map>
-
-struct Date
-{
-	int	year;
-	int	month;
-	int	day;
-};
-
 
 class BitcoinExchange
 {
@@ -32,7 +24,7 @@ class BitcoinExchange
 	bool is_valid_value(const std::string &value) const;
 
 	public:
-	BitcoinExchange()
+	BitcoinExchange();
 	BitcoinExchange(const BitcoinExchange &src);
 	BitcoinExchange &operator=(const BitcoinExchange &src);
 	~BitcoinExchange();
@@ -42,8 +34,8 @@ class BitcoinExchange
 	void load_intput(std::string input);
 	double	convert(std::string &date, std::string amount) const;
 
-}
+};
 
-void btc(char *input);
+void btc(std::string input);
 
 #endif
