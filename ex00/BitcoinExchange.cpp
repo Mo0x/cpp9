@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 17:41:16 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/08 18:49:17 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:45:20 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static int get_days_int_month (int year, int month)
 	}
 }
 
-bool BitcoinExchange::is_valid_data(const std::string &date, Date &extracted) const
+bool BitcoinExchange::is_valid_date(const std::string &date) const
 {
 	while (std::isspace(date))
 		date++;
@@ -99,9 +99,6 @@ bool BitcoinExchange::is_valid_data(const std::string &date, Date &extracted) co
 	int max_days = get_days_int_month(year, month);
 	if (day < 1 || day > max_days)
 		return false;
-	extracted.year = year;
-	extracted.month = month;
-	extracted.day = day;
 	return true;
 }
 
@@ -183,9 +180,14 @@ void BitcoinExchange::load_intput(const std::string &str_input)
 	while(std::getline(file, input_line))
 	{
 		trim(input_line);
+		if (inputLine.empty())
+		{
+			std::cout << "Error: bad input => empty" << std::endl;
+			continue;
+		}
 		if (first_line)
 		{
-			if (input_line == "date | vlue")
+			if (input_line == "date | value")
 			{
 				first_line = false;
 				continue ;
@@ -193,10 +195,50 @@ void BitcoinExchange::load_intput(const std::string &str_input)
 		}
 		first_line = false;
 		std::stringstream ss(input_line);
-		if (intput_line[11] != '|' || input_line[10] != ' ' || input_line[12] != ' ')
+		if (input_line.length() < 13 || intput_line[11] != '|' || input_line[10] != ' ' || input_line[12] != ' ')
 		{
-
+			input_line = input_line.empty() ? "empty" : input_line;
+			std::cout << "Error: bad input => " << input_line << std::endl;
+			continue ;
 		}
+		if (getline(ss, date, '|'))
+		{
+			if (!getline(ss, value))
+			{
+				std::cout << "Error: Bad input =>" << input_line << std::endl;
+				continue ;
+			}
+			date.erase(date.find_last_not_of(" \n\r\t") + 1);
+			amount.erase(amount.find_first_not_of( \n\r\t));
+			if (is_valid_date(date))
+			{
+				std::cout << "Error: bad input => " << date << std:;endl;
+				continue ;
+			}
+			if (!is_valid_value(amount))
+			{
+				std::cout << "Error: not a valid value." << std::endl;
+				continue ;
+			}
+			try 
+			{
+				value = std::stdof(amount);
+			}
+			catch (...)
+			{
+				std::cerr << "Error: invalid value format." << std::endl;
+				continue;
+			}
+			if (value > 1000)
+			{
+				std::cout << "Error: too large number." << std::endl;
+				continue ;
+			}
+			double rate = get_exchange_rate(date);
+			std::cout << date << " => " << value << " = " << value * rate << std::endl;
+		}
+		else
+			std::cerr << "Error: bad input =>" << input_line << std::endl;
 	}
 
 }

@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:04:32 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/08 16:42:26 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:28:52 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class BitcoinExchange
 {
 	private:
 	std::map<std::string, double> m_rate;
-	bool is_valid_data(const std::string &date) const;
+	bool is_valid_date(const std::string &date) const;
 	bool is_valid_value(const std::string &value) const;
 
 	public:
