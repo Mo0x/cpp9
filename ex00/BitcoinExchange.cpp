@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 17:41:16 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/10 18:36:59 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:51:49 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ void BitcoinExchange::load_data(const std::string &str_data)
 {
 	std::ifstream data(str_data.c_str());
 
-	if (data.fail())
+	if (!data)
 		throw std::runtime_error("Couldn't open file.");
 	std::string line, date;
 	double rate;
@@ -173,7 +173,7 @@ void BitcoinExchange::load_intput(const std::string &str_input)
 {
 	std::ifstream input(str_input.c_str());;
 
-	if (input.fail())
+	if (!input)
 		throw std::runtime_error("Error: couldn't open file.");
 	std::string input_line, date, amount;
 	double value;
@@ -262,5 +262,6 @@ void	btc(std::string input)
 	BitcoinExchange btce;
 
 	btce.load_data("./data/data.csv");
+	std::cout << "debg" << std::endl;
 	btce.load_intput(input);
 }
