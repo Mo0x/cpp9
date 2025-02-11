@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 17:41:16 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/10 18:51:49 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/11 12:47:04 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <string>
 #include <sstream>
 #include <cstdlib>
+#include <cctype>
 
 BitcoinExchange::BitcoinExchange()
 {
@@ -82,10 +83,14 @@ bool BitcoinExchange::is_valid_date(const std::string &date) const
 		return false;
 	size_t	first_dash = date.find('-');
 	if (first_dash == std::string::npos)
+	{
 		return false;
+	}
 	size_t	second_dash = date.find("-", first_dash + 1);
 	if (second_dash == std::string::npos)
+	{
 		return false;
+	}
 	std::string year_str = date.substr(0, first_dash);
 	std::string month_str = date.substr(first_dash + 1, second_dash - first_dash - 1);
 	std::string day_str = date.substr(second_dash + 1);
@@ -93,22 +98,81 @@ bool BitcoinExchange::is_valid_date(const std::string &date) const
 	int year, month, day;
 	std::istringstream ys(year_str), ms(month_str), ds(day_str);
 	if (!(ys >> year) || !(ms >> month) || !(ds >> day))
+	{
 		return false;
+	}
 	if (month < 1 || month > 12)
 		return false;
-	
 	int max_days = get_days_int_month(year, month);
 	if (day < 1 || day > max_days)
 		return false;
 	return true;
 }
 
-bool BitcoinExchange::is_valid_value(const std::string &value) const
+bool BitcoinExchange::is_valid_value(const std::string &value) const 
+{
+    // Trim leading/trailing whitespace (C++98 compatible)
+    size_t start = value.find_first_not_of(" \t");
+    if (start == std::string::npos) return false;  // All whitespace
+    
+    size_t end = value.find_last_not_of(" \t");
+    std::string trimmed = value.substr(start, end - start + 1);
+
+    if (trimmed.empty()) return false;
+    
+    // Disallow negative values
+    if (trimmed[0] == '-') return false;
+    
+    bool has_dot = false;
+    size_t scan_start = 0;
+    
+    // Allow optional leading '+'
+    if (trimmed[0] == '+') scan_start = 1;
+    
+    for (size_t i = scan_start; i < trimmed.size(); ++i) 
+    {
+        const char c = trimmed[i];
+        if (c == '.') 
+        {
+            if (has_dot || i == scan_start || i == trimmed.size() - 1)
+                return false;
+            has_dot = true;
+        } 
+        else if (!std::isdigit(static_cast<unsigned char>(c))) 
+        {
+            return false;  // Reject non-digit characters (including spaces)
+        }
+    }
+
+    std::istringstream vs(trimmed);
+    double valuef;
+    if (!(vs >> valuef) || valuef < 0 || valuef > 1000)
+        return false;
+    
+    // Check for trailing garbage
+    char remaining;
+    if (vs >> remaining) return false;
+    
+    // Integer validation
+    if (!has_dot) 
+    {
+        if (valuef < 1) return false;
+        if (valuef != static_cast<int>(valuef)) return false;
+    }
+    
+    return true;
+}
+
+/* bool BitcoinExchange::is_valid_value(const std::string &value) const
 {
 	if (value.empty())
+	{
 		return false;
+	}
 	if (value[0] == '-')
+	{
 		return false;
+	}
 	
 	bool	has_dot = false;
 	size_t	start = 0;
@@ -120,7 +184,9 @@ bool BitcoinExchange::is_valid_value(const std::string &value) const
 		if (c == '.')
 		{
 			if (has_dot || i == start || i == value.size() -1)
+			{
 				return false;
+			}
 			has_dot = true;
 		}
 		else if (!isdigit(c))
@@ -142,7 +208,7 @@ bool BitcoinExchange::is_valid_value(const std::string &value) const
 			return false;
 	}
 	return true;
-}
+} */
 
 void BitcoinExchange::load_data(const std::string &str_data)
 {
@@ -181,7 +247,6 @@ void BitcoinExchange::load_intput(const std::string &str_input)
 
 	while(std::getline(input, input_line))
 	{
-		trim(input_line);
 		if (input_line.empty())
 		{
 			std::cout << "Error: bad input => empty" << std::endl;
@@ -205,14 +270,16 @@ void BitcoinExchange::load_intput(const std::string &str_input)
 		}
 		if (std::getline(ss, date, '|'))
 		{
+			trim(date);
 			if (!std::getline(ss, amount))
 			{
 				std::cout << "Error: Bad input =>" << input_line << std::endl;
 				continue ;
 			}
 			date.erase(date.find_last_not_of(" \n\r\t") + 1);
-			amount.erase(amount.find_first_not_of(" \n\r\t"));
-			if (is_valid_date(date))
+			trim(amount);
+			//amount.erase(amount.find_first_not_of(" \n\r\t"));
+			if (!is_valid_date(date))
 			{
 				std::cout << "Error: bad input => " << date << std::endl;
 				continue ;
@@ -262,6 +329,5 @@ void	btc(std::string input)
 	BitcoinExchange btce;
 
 	btce.load_data("./data/data.csv");
-	std::cout << "debg" << std::endl;
 	btce.load_intput(input);
 }
