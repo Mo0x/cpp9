@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 17:41:16 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/11 12:47:04 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/11 12:51:43 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,61 +109,7 @@ bool BitcoinExchange::is_valid_date(const std::string &date) const
 	return true;
 }
 
-bool BitcoinExchange::is_valid_value(const std::string &value) const 
-{
-    // Trim leading/trailing whitespace (C++98 compatible)
-    size_t start = value.find_first_not_of(" \t");
-    if (start == std::string::npos) return false;  // All whitespace
-    
-    size_t end = value.find_last_not_of(" \t");
-    std::string trimmed = value.substr(start, end - start + 1);
-
-    if (trimmed.empty()) return false;
-    
-    // Disallow negative values
-    if (trimmed[0] == '-') return false;
-    
-    bool has_dot = false;
-    size_t scan_start = 0;
-    
-    // Allow optional leading '+'
-    if (trimmed[0] == '+') scan_start = 1;
-    
-    for (size_t i = scan_start; i < trimmed.size(); ++i) 
-    {
-        const char c = trimmed[i];
-        if (c == '.') 
-        {
-            if (has_dot || i == scan_start || i == trimmed.size() - 1)
-                return false;
-            has_dot = true;
-        } 
-        else if (!std::isdigit(static_cast<unsigned char>(c))) 
-        {
-            return false;  // Reject non-digit characters (including spaces)
-        }
-    }
-
-    std::istringstream vs(trimmed);
-    double valuef;
-    if (!(vs >> valuef) || valuef < 0 || valuef > 1000)
-        return false;
-    
-    // Check for trailing garbage
-    char remaining;
-    if (vs >> remaining) return false;
-    
-    // Integer validation
-    if (!has_dot) 
-    {
-        if (valuef < 1) return false;
-        if (valuef != static_cast<int>(valuef)) return false;
-    }
-    
-    return true;
-}
-
-/* bool BitcoinExchange::is_valid_value(const std::string &value) const
+bool BitcoinExchange::is_valid_value(const std::string &value) const
 {
 	if (value.empty())
 	{
@@ -208,7 +154,7 @@ bool BitcoinExchange::is_valid_value(const std::string &value) const
 			return false;
 	}
 	return true;
-} */
+}
 
 void BitcoinExchange::load_data(const std::string &str_data)
 {
