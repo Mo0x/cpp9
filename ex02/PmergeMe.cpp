@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 12:57:40 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/13 16:35:31 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/13 16:39:34 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,25 +101,25 @@ void PmergeMe::merge_insertion_sort_vec(std::vector<int> &vec)
 {
 	if (vec.size() < 1)
 		return ;
-	std::vector<int> chain1, chain2;
+	std::vector<int> main, pending;
 	size_t i;
 	for (i = 0; i + 1 < vec.size(); i += 2)
 	{
 		if (vec[i] > vec[i + 1])
-		chain1.push_back(vec[i +1]);
-		chain2.push_back(vec[i]);
+		main.push_back(vec[i +1]);
+		pending.push_back(vec[i]);
 	}
 	if (i < vec.size())
-		chain2.push_back(vec[i]);
-	merge_insertion_sort_vec(chain1);
-	std::vector<size_t> order = generate_jacob(chain2.size());
-	for (size_t j = 0; j < chain1.size(); j++)
+		pending.push_back(vec[i]);
+	merge_insertion_sort_vec(main);
+	std::vector<size_t> order = generate_jacob(pending.size());
+	for (size_t j = 0; j < main.size(); j++)
 	{
-		int element = chain2[order[j]];
-		std::vector<int>::iterator it = std::lower_bound(chain1.begin(), chain1.end(), element);
-		chain1.insert(it, element);
+		int element = pending[order[j]];
+		std::vector<int>::iterator it = std::lower_bound(main.begin(), main.end(), element);
+		main.insert(it, element);
 	}
-	vec = chain1;
+	vec = main;
 }
 
 std::vector <size_t> PmergeMe::generate_jacob(size_t n)
