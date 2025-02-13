@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 13:32:54 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/11 14:49:08 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/13 12:41:16 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,6 @@ void Rpn::do_the_rpn_thing(std::string input)
 				int ret = (this->*operation)(b, a);
 				m_stack.push(ret);
 			}
-
-			//here to a pointer to member func to choose operation to do with a and b
 		}
 		else
 		{
