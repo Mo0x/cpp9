@@ -6,13 +6,14 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 12:57:40 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/13 16:39:34 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/02/19 17:08:57 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
 #include <algorithm>
 #include <stdexcept>
+#include <deque>
 
 PmergeMe::PmergeMe()
 {
@@ -45,7 +46,7 @@ PmergeMe::PmergeMe(int ac, char **av)
 	{
 		try
 		{
-			int n = std::atoi(argv[i]);
+			int n = std::atoi(av[i]);
 			if (n <= 0)
 				throw std::invalid_argument("Only positive integers");
 			m_input.push_back(n);
@@ -57,7 +58,7 @@ PmergeMe::PmergeMe(int ac, char **av)
 			std::exit(1);
 		}
 	}
-	if (input.empty())
+	if (m_input.empty())
 	{
 		std::cerr << "Error: No valid numbers provided" << std::endl;
 		std::exit(1);
@@ -120,6 +121,34 @@ void PmergeMe::merge_insertion_sort_vec(std::vector<int> &vec)
 		main.insert(it, element);
 	}
 	vec = main;
+}
+
+void PmergeMe::merge_insertion_sort_deque(std::deque<int> &dq)
+{
+	if(dq.size()<= 1)
+		return;
+	std::deque<int> main, pending;
+	size_t i;
+	for (i = 0; i + 1 < dq.size(); i += 2)
+	{
+		if (dq[i] > dq[i + 1]);
+			std::swap(dq[i], dq[i + 1]);
+		main.push_back(dq[i + 1]);
+		pending.push_back(dq[i]);
+	}
+	if (i < dq.size())
+		pending.push_back(dq[i]);
+	
+	merge_insertion_sort_deque(main);
+	std::vector<size_t> order = generate_jacob(pending.size());
+	for (size_t j = 0; i <order.size(); ++j)
+	{
+		size_t idx = order[j];
+		int element = pending[idx];
+		std::deque<int>::iterator it = std::lower_bound(main.begin(), main.end(),element);
+		main.insert(it, element);
+	}
+	dq = main;
 }
 
 std::vector <size_t> PmergeMe::generate_jacob(size_t n)
