@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 17:41:16 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/11 12:51:43 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/03/14 16:37:18 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,7 +224,6 @@ void BitcoinExchange::load_intput(const std::string &str_input)
 			}
 			date.erase(date.find_last_not_of(" \n\r\t") + 1);
 			trim(amount);
-			//amount.erase(amount.find_first_not_of(" \n\r\t"));
 			if (!is_valid_date(date))
 			{
 				std::cout << "Error: bad input => " << date << std::endl;
