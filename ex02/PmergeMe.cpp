@@ -6,7 +6,7 @@
 /*   By: mgovinda <mgovinda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 12:57:40 by mgovinda          #+#    #+#             */
-/*   Updated: 2025/02/19 17:08:57 by mgovinda         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:48:19 by mgovinda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ PmergeMe::~PmergeMe()
 
 PmergeMe::PmergeMe(int ac, char **av)
 {
-	for (int i = 0; i < ac; i++)
+	for (int i = 1; i < ac; i++)
 	{
 		try
 		{
@@ -67,6 +67,7 @@ PmergeMe::PmergeMe(int ac, char **av)
 
 void PmergeMe::diplay_unsorted() const
 {
+	std::cout << "Before:";
 	for (size_t i = 0; i < m_input.size(); i++)
 	{
 		std::cout << " " << m_input[i];
@@ -87,15 +88,16 @@ void PmergeMe::sort_and_displayer()
 	std::clock_t start_dq = std::clock();
 	merge_insertion_sort_deque(dq);
 	std::clock_t end_dq = std::clock();
-	double time_dq = 10000000.0 * (end_dq - end_dq) / CLOCKS_PER_SEC;
+	double time_dq = 10000000.0 * (end_dq - start_dq) / CLOCKS_PER_SEC;
 
-	std::cout << "After:";
+	std::cout << std::endl;
+	std::cout << "After: ";
 	for (size_t i = 0; i < vec.size(); i++)
 		std::cout <<  " " << vec[i];
-	std::cout << std::endl;
+	std::cout << std::endl << std::endl;
 	
-	std::cout << "Time to process a range of " << m_input.size() << "elements with std::vector: " << time_vec << " µs" << std::endl;
-	std::cout << "Time to process a range of " << m_input.size() << "elements with std::deque: " << time_vec << " µs" << std::endl;
+	std::cout << "Time to process a range of " << m_input.size() << " elements with std::vector: " << time_vec << " µs" << std::endl;
+	std::cout << "Time to process a range of " << m_input.size() << " elements with std::deque: " << time_dq << " µs" << std::endl;
 }
 
 void PmergeMe::merge_insertion_sort_vec(std::vector<int> &vec)
@@ -107,6 +109,7 @@ void PmergeMe::merge_insertion_sort_vec(std::vector<int> &vec)
 	for (i = 0; i + 1 < vec.size(); i += 2)
 	{
 		if (vec[i] > vec[i + 1])
+			std::swap(vec[i], vec[i + 1]);
 		main.push_back(vec[i +1]);
 		pending.push_back(vec[i]);
 	}
@@ -114,11 +117,15 @@ void PmergeMe::merge_insertion_sort_vec(std::vector<int> &vec)
 		pending.push_back(vec[i]);
 	merge_insertion_sort_vec(main);
 	std::vector<size_t> order = generate_jacob(pending.size());
-	for (size_t j = 0; j < main.size(); j++)
+	for (size_t j = 0; j < order.size(); j++)
 	{
-		int element = pending[order[j]];
-		std::vector<int>::iterator it = std::lower_bound(main.begin(), main.end(), element);
-		main.insert(it, element);
+		size_t idx = order[j];
+		if (idx < pending.size())
+		{	
+			int element = pending[idx];
+			std::vector<int>::iterator it = std::lower_bound(main.begin(), main.end(), element);
+			main.insert(it, element);
+		}
 	}
 	vec = main;
 }
@@ -131,22 +138,25 @@ void PmergeMe::merge_insertion_sort_deque(std::deque<int> &dq)
 	size_t i;
 	for (i = 0; i + 1 < dq.size(); i += 2)
 	{
-		if (dq[i] > dq[i + 1]);
+		if (dq[i] > dq[i + 1])
 			std::swap(dq[i], dq[i + 1]);
-		main.push_back(dq[i + 1]);
-		pending.push_back(dq[i]);
+		main.push_back(dq[i]);
+		pending.push_back(dq[i + 1]);
 	}
 	if (i < dq.size())
 		pending.push_back(dq[i]);
 	
 	merge_insertion_sort_deque(main);
 	std::vector<size_t> order = generate_jacob(pending.size());
-	for (size_t j = 0; i <order.size(); ++j)
+	for (size_t j = 0; j < order.size(); ++j)
 	{
 		size_t idx = order[j];
-		int element = pending[idx];
-		std::deque<int>::iterator it = std::lower_bound(main.begin(), main.end(),element);
-		main.insert(it, element);
+		if (idx < pending.size())
+		{
+			int element = pending[idx];
+			std::deque<int>::iterator it = std::lower_bound(main.begin(), main.end(),element);
+			main.insert(it, element);
+		}
 	}
 	dq = main;
 }
@@ -164,9 +174,9 @@ std::vector <size_t> PmergeMe::generate_jacob(size_t n)
 		size_t start = jacob[i -1] + 1;
 		if (start > n)
 			break;
-			end = std::min(end, n);
-			for (size_t j = end; j >= start; --j)
-				order.push_back(j - 1);
+		end = std::min(end, n);
+		for (size_t j = end; j >= start; --j)
+			order.push_back(j - 1);
 	}
 	if (order.empty() || order[0] != 0)
 		order.insert(order.begin(), 0);
